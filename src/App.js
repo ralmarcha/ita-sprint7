@@ -2,7 +2,11 @@ import React from 'react';
 import { useState } from "react";
 import {data} from './data'
 import './App.css';
-import { Checkbox, Label , TextInput, Card} from 'flowbite-react';
+import { Checkbox, Label, Card } from 'flowbite-react';
+import Button from './components/Button';
+
+//nomes apliqui si web està clicat i si els inputs son positius
+//enlloc de posar total + suma posarho a la funció i amb condicionals
 
 
 function App() {
@@ -31,12 +35,13 @@ function App() {
     setTotal(total);
   };
  
-  
   const [mostrar, setMostrar] = useState(false);
 
-  const [idiomes, setIdiomes] = useState(0)
-  const [pagines, setPagines] = useState(0)
-  const suma = pagines * idiomes * 30 
+  const [idiomes, setIdiomes] = useState(1)
+  const [pagines, setPagines] = useState(1)
+  const suma = pagines * idiomes * 30
+    
+
 
   return (
    <>
@@ -52,20 +57,26 @@ function App() {
          </div>
             {mostrar ?
                               
-         ( <div className="max-w-xs ml-10">
+         ( <div className="max-w-sm ml-10">
           <Card>
             <form className="flex flex-col gap-2">
                 <div className="flex gap-4">
                   <div className="block">
                  <Label htmlFor="pags" value="Número de pàgines :"/>
-                  </div>      
-                 <TextInput className="w-14" id="pags" type="number" required={true} name="pagines" onChange={ev => setPagines(ev.target.value)} placeholder="0"/>
+                  </div>     
+                
+                 <Button value={pagines} setVal={setPagines}
+                   /> 
+
                 </div>
+              
               <div className="flex gap-4">
                <div className="block">
                   <Label htmlFor="idiomes" value="Número d ' idiomes :"/>
                </div>
-                 <TextInput className="w-14" id="idiomes" type="number" required={true} name="idiomes" onChange={ev => setIdiomes(ev.target.value)} placeholder="0"/>
+              
+                    <Button value={idiomes}  setVal={setIdiomes}
+                    /> 
              </div>
            </form>
          </Card>
@@ -73,27 +84,24 @@ function App() {
       : null}
             
   <div className="flex items-center gap-2">
-    <Checkbox id="seo" checked={isChecked[1]}
-          onChange={() =>handleOnChange(1)} />
-    <Label htmlFor="seo">
-    Una consultoria SEO (300€)
-    </Label>
+     <Checkbox id="seo" checked={isChecked[1]}
+           onChange={() =>handleOnChange(1)} />
+      <Label htmlFor="seo">
+        Una consultoria SEO (300€)
+      </Label>
         </div>
   <div className="flex items-center gap-2">
     <Checkbox id="ads" checked={isChecked[2]}
           onChange={() =>handleOnChange(2)}/>
     <Label htmlFor="ads">
-    Una campanya de Google Ads  (200€)
+     Una campanya de Google Ads  (200€)
     </Label>
         </div>
         
-  <p>Preu: {total + suma}€ </p> 
+  <h2>Preu: {total + suma}€ </h2> 
       
-</div>
-
-  
-      
-      </> 
+</div>    
+</> 
   );
 }
 
