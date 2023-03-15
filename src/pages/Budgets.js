@@ -1,35 +1,20 @@
 
 import {  Card, Checkbox, Label} from 'flowbite-react';
 import Button from '../components/Button';
-import { useState , useEffect } from "react";
+
 import {data} from '../data'
+import { useLocalStorage } from '../components/useLocalStorage';
 
 
 const Budgets = () => {
     
 
-    
-    
-    
-    
-   
-
-    
-   const [isChecked, setIsChecked] = useState(
-    new Array(data.length).fill(false));
+const [isChecked, setIsChecked] = useLocalStorage('isCheked',
+      new Array(data.length).fill(false));
   
-    useEffect(() => {
-      window.localStorage.setItem('isChecked', JSON.stringify(isChecked))
-    }, [isChecked])
-    useEffect(() => {
-      const data = window.localStorage.getItem('isCheked')
-      if (data !== null) {
-       setIsChecked(JSON.parse(data))
-      }
-    }, [])
-  const [total, setTotal] = useState(0);
+const [total, setTotal] = useLocalStorage('total', 0);
 
-  const handleOnChange = (position) => {
+const handleOnChange = (position) => {
   
     const checkedState = isChecked.map((item, index) =>
       index === position ? !item : item
@@ -37,30 +22,35 @@ const Budgets = () => {
 
     setIsChecked(checkedState);
 
-    const total = checkedState.reduce(
+    const sumaTotal = checkedState.reduce(
       (sum, currentState, index) => {
-        // if (index[0]) {
-        //   const suma = pagines * idiomes * 30;
-        // }
-        if (currentState === true) {
+       if (currentState === true) {
           return sum + data[index].price;
         }
         return sum;
       },
       0
     );
-  
-
-    setTotal(total);
+      setTotal(sumaTotal);
   };
  
-  const [mostrar, setMostrar] = useState(false);
+  const [mostrar, setMostrar] = useLocalStorage('mostrar', false);
 
-  const [idiomes, setIdiomes] = useState(1)
-  const [pagines, setPagines] = useState(1)
-  const suma = pagines * idiomes * 30;
-   
- 
+  const [idiomes, setIdiomes] = useLocalStorage('idiomes', 0)
+  const [pagines, setPagines] = useLocalStorage('pagines', 0)
+  const suma = pagines * idiomes * 30
+  const sumaTotal = suma + total;
+
+  
+  //Botón para guardar los datos generando una card a la derecha
+  const saveData = () => {
+   localStorage.setItem('mostrar', JSON.stringify(mostrar))
+   localStorage.setItem('pagines', JSON.stringify(pagines))
+   localStorage.setItem('idiomes', JSON.stringify(idiomes))
+   localStorage.setItem('sumaTotal',JSON.stringify(sumaTotal))
+   localStorage.setItem('isChecked',JSON.stringify(isChecked))
+  }
+  
     
     return (
     <>
@@ -84,7 +74,7 @@ const Budgets = () => {
                   <div className="block">
                  <Label htmlFor="pags" value="Número de pàgines :"/>
                   </div>     
-                   <Button value={pagines} setValue={setPagines}
+                   <Button value={pagines} setValue={setPagines} 
                    /> 
 
                 </div>
@@ -93,7 +83,7 @@ const Budgets = () => {
                <div className="block">
                   <Label htmlFor="idiomes" value="Número d ' idiomes :"/>
                </div>
-                  <Button value={idiomes}  setValue={setIdiomes}
+                  <Button value={idiomes}  setValue={setIdiomes} 
                     /> 
              </div>
            </form>
@@ -118,7 +108,11 @@ const Budgets = () => {
     </Label>
         </div>
         
-  <h2>Preu: {total + suma}€ </h2> 
+          <h2>Preu: {sumaTotal}€ </h2> 
+        <div><button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded" onClick={saveData}>
+          Save Budget
+    </button></div>
+          
       
       </div>    
       

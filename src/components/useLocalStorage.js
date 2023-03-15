@@ -1,4 +1,5 @@
 import { useState } from "react";
+//falta usar el useEffect¿?
 
 export function useLocalStorage(key, initialValue) {
     const [storedValue, setStoredValue] = useState(() => {
@@ -22,3 +23,13 @@ export function useLocalStorage(key, initialValue) {
     }
     return [storedValue, setValue]  
 }
+
+// useEffect(() => {
+    //   window.localStorage.setItem('isChecked', JSON.stringify(isChecked))
+    // }, [isChecked])
+    // useEffect(() => {
+    //   const data = window.localStorage.getItem('isCheked')
+    //   if (data !== null) {
+    //    setIsChecked(JSON.parse(data))
+    //   }
+    // }, [])
