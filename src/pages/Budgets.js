@@ -1,14 +1,14 @@
 
 import {  Card, Checkbox, Label} from 'flowbite-react';
 import Button from '../components/Button';
-
+import { Budget } from '../components/Budget';
 import {data} from '../data'
 import { useLocalStorage } from '../components/useLocalStorage';
+import { useEffect, useState } from 'react';
 
 
 const Budgets = () => {
     
-
 const [isChecked, setIsChecked] = useLocalStorage('isCheked',
       new Array(data.length).fill(false));
   
@@ -36,11 +36,21 @@ const handleOnChange = (position) => {
  
   const [mostrar, setMostrar] = useLocalStorage('mostrar', false);
 
-  const [idiomes, setIdiomes] = useLocalStorage('idiomes', 0)
-  const [pagines, setPagines] = useLocalStorage('pagines', 0)
+  const [idiomes, setIdiomes] = useState(0)
+  const [pagines, setPagines] = useState(0)
   const suma = pagines * idiomes * 30
   const sumaTotal = suma + total;
 
+  const [services, setServices] = useState([]);
+  const servicesName = [];
+
+
+  useEffect(() => {
+    isChecked.map((item, index) => {
+      if (item === true) servicesName.push(data[index].name);
+    });
+    setServices(servicesName);
+  }, [isChecked]);
   
   //Botón para guardar los datos generando una card a la derecha
   const saveData = () => {
@@ -48,10 +58,12 @@ const handleOnChange = (position) => {
    localStorage.setItem('pagines', JSON.stringify(pagines))
    localStorage.setItem('idiomes', JSON.stringify(idiomes))
    localStorage.setItem('sumaTotal',JSON.stringify(sumaTotal))
-   localStorage.setItem('isChecked',JSON.stringify(isChecked))
+   localStorage.setItem('isChecked', JSON.stringify(isChecked))
+   localStorage.setItem('services', JSON.stringify(services))
   }
   
-    
+
+
     return (
     <>
     <h1>Budgets</h1>
@@ -92,6 +104,7 @@ const handleOnChange = (position) => {
         
           : null}
     
+       
             
   <div className="flex items-center gap-2">
      <Checkbox id="seo" checked={isChecked[1]}
@@ -113,9 +126,12 @@ const handleOnChange = (position) => {
           Save Budget
     </button></div>
           
-      
-      </div>    
-      
+    
+        </div>    
+        
+
+
+      <Budget isChecked={services}  pagines={pagines} idiomes={idiomes} sumaTotal={sumaTotal}/>
 
 
 
